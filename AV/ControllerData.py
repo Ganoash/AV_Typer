@@ -117,6 +117,16 @@ class ControllerData(object):
             raise ValueError('Sheet is not set!')
 
     @property
+    def bp_range(self):
+        if self.sheet_set and self.sheet_type == 'borrel':
+            return list(range(int(self.config[self.sheet_type]['bp_range'].split(',')[0]) - 1,
+                              int(self.config[self.sheet_type]['bp_range'].split(',')[1])))
+    @property
+    def weekend_subsidie_index(self):
+        if self.sheet_set and self.sheet_type == 'weekend':
+            return int(self.config[self.sheet_type]['voorklim_index'])-1
+
+    @property
     def header_index(self):
         if self.sheet_set:
             return self.config[self.sheet_type]['header_index']
