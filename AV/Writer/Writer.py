@@ -7,38 +7,6 @@ import time
 import pandas as pd
 
 
-class Writer(object):
-
-    def __init__(self):
-        config = ConfigParser()
-        config.read(path.join(path.dirname(__file__), "../__conf__.ini"))
-        self.key_press_delay = float(config["Typing"]["key_press_delay"])
-        self.tab_delay = float(config["Typing"]["tab_delay"])
-        self.leave_key = config["Typing"]["leave_key"]
-
-    def write(self, df: pd.DataFrame):
-        data = Data_Stepper(df)
-        time.sleep(5)
-        for writable, tabs in data:
-            keyboard.write(writable, delay=self.key_press_delay)
-            self.wait()
-            if tabs == -1:
-                keyboard.press('enter')
-                self.wait()
-            else:
-                for _ in range(tabs):
-                    keyboard.press('tab')
-                    self.wait()
-            if keyboard.is_pressed(self.leave_key):
-                print('terminated')
-                break
-
-
-
-    def wait(self):
-        time.sleep(self.tab_delay)
-
-
 class Data_Stepper(object):
 
     def __init__(self, data):
@@ -68,3 +36,44 @@ class Data_Stepper(object):
 
         raise StopIteration()
 
+
+class Writer(object):
+
+    def __init__(self):
+        config = ConfigParser()
+        config.read(path.join(path.dirname(__file__), "../__conf__.ini"))
+        self.key_press_delay = float(config["Typing"]["key_press_delay"])
+        self.tab_delay = float(config["Typing"]["tab_delay"])
+        self.leave_key = config["Typing"]["leave_key"]
+
+    def write(self, data: Data_Stepper, double_enter: bool = False):
+        for writable, tabs in data:
+            keyboard.write(writable, delay=self.key_press_delay)
+            self.wait()
+            if tabs == -1:
+                keyboard.press('enter')
+                if double_enter:
+                    keyboard.press('enter')
+                self.wait()
+            else:
+                for _ in range(tabs):
+                    keyboard.press('tab')
+                    self.wait()
+            if keyboard.is_pressed(self.leave_key):
+                print('terminated')
+                break
+
+    def write_lasten(self, overzicht: pd.DataFrame, bijdragers: pd.DataFrame):
+        overzicht = Data_Stepper(overzicht)
+        bijdragers = Data_Stepper(bijdragers)
+        time.sleep(5)
+        self.write(overzicht)
+        self.write(bijdragers, True)
+
+    def write_baten(self, df: pd.DataFrame):
+        data = Data_Stepper(df)
+        time.sleep(5)
+        self.write(data)
+
+    def wait(self):
+        time.sleep(self.tab_delay)
