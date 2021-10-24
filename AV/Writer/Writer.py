@@ -45,6 +45,7 @@ class Writer(object):
         self.key_press_delay = float(config["Typing"]["key_press_delay"])
         self.tab_delay = float(config["Typing"]["tab_delay"])
         self.leave_key = config["Typing"]["leave_key"]
+        self.start_key = config["Typing"]["start_key"]
 
     def write(self, data: Data_Stepper, double_enter: bool = False):
         for writable, tabs in data:
@@ -66,14 +67,17 @@ class Writer(object):
     def write_lasten(self, overzicht: pd.DataFrame, bijdragers: pd.DataFrame):
         overzicht = Data_Stepper(overzicht)
         bijdragers = Data_Stepper(bijdragers)
-        time.sleep(5)
+        self.wait_for_key()
         self.write(overzicht)
         self.write(bijdragers, True)
 
     def write_baten(self, df: pd.DataFrame):
         data = Data_Stepper(df)
-        time.sleep(5)
+        self.wait_for_key()
         self.write(data)
 
     def wait(self):
         time.sleep(self.tab_delay)
+
+    def wait_for_key(self):
+        keyboard.wait(self.start_key, trigger_on_release=True)
