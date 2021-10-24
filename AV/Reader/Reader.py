@@ -1,6 +1,6 @@
 import openpyxl
 import pandas as pd
-from typing import List
+from typing import List, Tuple
 from configparser import ConfigParser
 import os.path as path
 
@@ -16,7 +16,7 @@ class Reader(object):
         self.data = data
         self.collector = Collector(data)
 
-    def get_lasten(self) -> pd.DataFrame:
+    def get_lasten(self) -> Tuple[pd.DataFrame, pd.DataFrame]:
         """
         Function for getting a dataframe with the compiled list of lasten regels
         :return: a dataframe containing all lastenregels from the compiled sheet
@@ -37,7 +37,7 @@ class Reader(object):
         debiteuren: pd.DataFrame = debiteuren.drop(['Debit', 'Saldo'], axis=1).rename({'Credit': 'Bedrag'}, axis=1)
         debiteuren["Omschrijving"] = debiteuren["Omschrijving"].map("Bijdrage {}".format)
 
-        return pd.concat([overzicht, debiteuren], axis=0)
+        return overzicht, debiteuren
 
     def get_baten(self):
         """
