@@ -1,7 +1,7 @@
 import threading
 from configparser import ConfigParser
 from os import path
-from AV.Reader.Reader import Reader, Simple_Reader
+from AV.Reader.Reader import Reader, Simple_Reader, Borrel_Reader, Weekend_Reader
 from AV.Writer.Writer import Writer
 from AV.ControllerData import ControllerData
 
@@ -22,7 +22,12 @@ class Controller(object):
         if self.data.sheet_type == 'simpel':
             self.reader = Simple_Reader(self.data)
             return
-        self.reader = Reader(self.data)
+        elif self.data.sheet_type == 'borrel':
+            self.reader = Borrel_Reader(self.data)
+        elif self.data.sheet_type == 'weekend':
+            self.reader = Weekend_Reader(self.data)
+        else:
+            self.reader = Reader(self.data)
 
     def start_write_baten(self):
         if self.reader is None:
@@ -39,6 +44,8 @@ class Controller(object):
 
     def set_sheet_type(self, value):
         self.data.sheet_type = value
+        if self.reader is not None:
+            self.set_workbook()
 
     def set_file_path(self, value):
         print('called')
