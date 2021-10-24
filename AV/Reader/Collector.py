@@ -29,3 +29,9 @@ class Collector(object):
     def collect_debiteuren(self) -> pd.DataFrame:
         return self.load_data().loc[self.data.debiteuren_start:].dropna(how='all')
 
+    def collect_bp_range(self):
+        return self.load_data().loc[self.data.bp_range]
+
+    def collect_weekend_subsidie(self):
+        return self.load_data().loc[[self.data.weekend_subsidie_index]]
+
