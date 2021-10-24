@@ -1,6 +1,9 @@
+import datetime
+
 import openpyxl
+import pandas
 import pandas as pd
-from typing import List, Tuple
+from typing import Tuple
 from configparser import ConfigParser
 import os.path as path
 
@@ -79,3 +82,39 @@ class Simple_Reader(Reader):
     def get_baten(self):
         # collect debiteuren en format bedragen
         return self.collector.collect_debiteuren()
+
+
+class Borrel_Reader(Reader):
+
+    def __init__(self, data: ControllerData):
+        super().__init__(data)
+
+    def get_lasten(self) -> Tuple[pd.DataFrame, pd.DataFrame]:
+        overzicht, bijdragers = super().get_lasten()
+        bp_data: pd.DataFrame = self.collector.collect_bp_range()
+        bp_line = bp_data.drop(['Credit', 'Debit'], axis=1)\
+            .rename({'Saldo': 'Bedrag'}, axis=1).iloc[[0]]
+        bp_line['Bedrag'] = bp_data['Saldo'].sum()
+        bp_line.loc[:, "Omschrijving"] = "Credit BP " + self.data.sheet_name
+        print(bp_line)
+        print(bp_data)
+
+
+        return overzicht, pd.concat([bp_line, bijdragers], axis=0)
+
+
+class Weekend_Reader(Reader):
+    def __init__(self, data: ControllerData):
+        super().__init__(data)
+
+    def get_lasten(self) -> Tuple[pd.DataFrame, pd.DataFrame]:
+        overzicht, bijdragers = super().get_lasten()
+        print(overzicht.columns)
+
+        overzicht = overzicht[overzicht.Bedrag != 0]
+        subsidie_data: pd.DataFrame = self.collector.collect_weekend_subsidie()\
+            .drop(['Credit', 'Saldo'], axis=1)\
+            .rename({'Debit': 'Bedrag'}, axis=1)
+        subsidie_data["Omschrijving"] = "Voorklimsubsidie Yeti " + self.data.sheet_name
+        print(subsidie_data)
+        return pd.concat([overzicht, subsidie_data], axis=0), bijdragers
