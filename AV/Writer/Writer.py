@@ -34,8 +34,6 @@ class Data_Stepper(object):
 
                 yield writable, self.tabs[key]
 
-        raise StopIteration()
-
 
 class Writer(object):
 
@@ -80,4 +78,4 @@ class Writer(object):
         time.sleep(self.tab_delay)
 
     def wait_for_key(self):
-        keyboard.wait(self.start_key, trigger_on_release=True)
+        keyboard.wait(self.start_key)
