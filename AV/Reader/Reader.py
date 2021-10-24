@@ -32,12 +32,12 @@ class Reader(object):
             .rename({'Debit': 'Bedrag'}, axis=1)
 
         # collect debiteuren, filter diegene er uit die dingen hebben voorgeschoten format bedragen
-        debiteuren = self.collector.collect_debiteuren()
-        debiteuren: pd.DataFrame = debiteuren.loc[debiteuren['Credit'] != 0]
-        debiteuren: pd.DataFrame = debiteuren.drop(['Debit', 'Saldo'], axis=1).rename({'Credit': 'Bedrag'}, axis=1)
-        debiteuren["Omschrijving"] = debiteuren["Omschrijving"].map("Bijdrage {}".format)
+        bijdragers = self.collector.collect_debiteuren()
+        bijdragers: pd.DataFrame = bijdragers.loc[bijdragers['Credit'] != 0]
+        bijdragers: pd.DataFrame = bijdragers.drop(['Debit', 'Saldo'], axis=1).rename({'Credit': 'Bedrag'}, axis=1)
+        bijdragers["Omschrijving"] = bijdragers["Omschrijving"].map("Bijdrage {}".format)
 
-        return overzicht, debiteuren
+        return overzicht, bijdragers
 
     def get_baten(self):
         """

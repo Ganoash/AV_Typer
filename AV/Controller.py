@@ -28,13 +28,13 @@ class Controller(object):
         if self.reader is None:
             raise ValueError('Reader is not yet initialized')
         print(self.reader)
-        t = threading.Thread(target=self.writer.write, args=[self.reader.get_baten()])
+        t = threading.Thread(target=self.writer.write_baten, args=[self.reader.get_baten()])
         t.start()
 
     def start_write_lasten(self):
         if self.reader is None:
             raise ValueError('Reader is not yet initialized')
-        t = threading.Thread(target=self.writer.write, args=[self.reader.get_lasten()])
+        t = threading.Thread(target=self.writer.write_lasten, args=[*self.reader.get_lasten()])
         t.start()
 
     def set_sheet_type(self, value):
