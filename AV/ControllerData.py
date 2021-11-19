@@ -2,6 +2,23 @@ import tkinter
 import openpyxl
 from configparser import ConfigParser
 from os import path
+from enum import Enum, auto
+
+class SheetType(Enum):
+    ACTIVITEIT = auto()
+    WEEKEND = auto()
+    BORREL = auto()
+    SIMPEL = auto()
+
+    def __str__(self):
+        if self is SheetType.ACTIVITEIT:
+            return "activiteiten"
+        elif self is SheetType.WEEKEND:
+            return "weekend"
+        elif self is SheetType.BORREL:
+            return "borrel"
+        elif self is SheetType.SIMPEL:
+            return "simpel"
 
 
 class ControllerData(object):
@@ -15,7 +32,7 @@ class ControllerData(object):
         self.sheet_types = list(filter(lambda x: not x[0].isupper(), config.sections()))
         self.sheet_type = self.sheet_types[0]
         self.file_path = ""
-        self.sheet_type = "activiteiten"
+        self.sheet_type = SheetType.ACTIVITEIT
         self.sheet_name = ""
 
     @property
@@ -32,7 +49,7 @@ class ControllerData(object):
         return self._sheet_type
 
     @sheet_type.setter
-    def sheet_type(self, sheet_type):
+    def sheet_type(self, sheet_type: SheetType):
         if sheet_type in self.sheet_types:
             self._sheet_type = sheet_type
         else:
@@ -88,48 +105,48 @@ class ControllerData(object):
     @property
     def overzicht_range(self):
         if self.sheet_set:
-            return list(range(int(self.config[self.sheet_type]['overzicht_range'].split(',')[0]) - 1,
-                              int(self.config[self.sheet_type]['overzicht_range'].split(',')[1])))
+            return list(range(int(self.config[str(self.sheet_type)]['overzicht_range'].split(',')[0]) - 1,
+                              int(self.config[str(self.sheet_type)]['overzicht_range'].split(',')[1])))
         else:
             raise ValueError('Sheet is not set!')
 
     @property
     def column_range(self):
         if self.sheet_set:
-            return list(range(int(self.config[self.sheet_type]['column_range'].split(',')[0]),
-                              int(self.config[self.sheet_type]['column_range'].split(',')[1])))
+            return list(range(int(self.config[str(self.sheet_type)]['column_range'].split(',')[0]),
+                              int(self.config[str(self.sheet_type)]['column_range'].split(',')[1])))
         else:
             raise ValueError('Sheet is not set!')
 
     @property
     def afronding_range(self):
         if self.sheet_set:
-            return list(range(int(self.config[self.sheet_type]['afronding_range'].split(',')[0]) - 1,
-                              int(self.config[self.sheet_type]['afronding_range'].split(',')[1])))
+            return list(range(int(self.config[str(self.sheet_type)]['afronding_range'].split(',')[0]) - 1,
+                              int(self.config[str(self.sheet_type)]['afronding_range'].split(',')[1])))
         else:
             raise ValueError('Sheet is not set!')
 
     @property
     def debiteuren_start(self):
         if self.sheet_set:
-            return int(self.config[self.sheet_type]['debiteuren_start']) - 1
+            return int(self.config[str(self.sheet_type)]['debiteuren_start']) - 1
         else:
             raise ValueError('Sheet is not set!')
 
     @property
     def bp_range(self):
-        if self.sheet_set and self.sheet_type == 'borrel':
-            return list(range(int(self.config[self.sheet_type]['bp_range'].split(',')[0]) - 1,
-                              int(self.config[self.sheet_type]['bp_range'].split(',')[1])))
+        if self.sheet_set and self.sheet_type is SheetType.BORREL:
+            return list(range(int(self.config[str(self.sheet_type)]['bp_range'].split(',')[0]) - 1,
+                              int(self.config[str(self.sheet_type)]['bp_range'].split(',')[1])))
     @property
     def weekend_subsidie_index(self):
-        if self.sheet_set and self.sheet_type == 'weekend':
-            return int(self.config[self.sheet_type]['voorklim_index'])-1
+        if self.sheet_set and self.sheet_type is SheetType.WEEKEND:
+            return int(self.config[str(self.sheet_type)]['voorklim_index'])-1
 
     @property
     def header_index(self):
         if self.sheet_set:
-            return self.config[self.sheet_type]['header_index']
+            return self.config[str(self.sheet_type)]['header_index']
         else:
             raise ValueError('Sheet is not set!')
 
@@ -137,7 +154,7 @@ class ControllerData(object):
     def filter_sheets(self):
         if self.sheet_type is None:
             raise ValueError('No sheet_type is set!')
-        return self.config[self.sheet_type]['filter']
+        return self.config[str(self.sheet_type)]['filter']
 
     def reload_config(self):
         config = ConfigParser()
