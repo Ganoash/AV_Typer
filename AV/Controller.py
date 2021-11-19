@@ -3,7 +3,7 @@ from configparser import ConfigParser
 from os import path
 from AV.Reader.Reader import Reader, Simple_Reader, Borrel_Reader, Weekend_Reader
 from AV.Writer.Writer import Writer
-from AV.ControllerData import ControllerData
+from AV.ControllerData import ControllerData, SheetType
 
 
 class Controller(object):
@@ -19,12 +19,12 @@ class Controller(object):
     def set_workbook(self):
         if self.data.sheet_type is None or self.data.file_path is None:
             raise ValueError('sheet_name or file_path not set')
-        if self.data.sheet_type == 'simpel':
+        if self.data.sheet_type is SheetType.SIMPEL:
             self.reader = Simple_Reader(self.data)
             return
-        elif self.data.sheet_type == 'borrel':
+        elif self.data.sheet_type is SheetType.BORREL:
             self.reader = Borrel_Reader(self.data)
-        elif self.data.sheet_type == 'weekend':
+        elif self.data.sheet_type is SheetType.WEEKEND:
             self.reader = Weekend_Reader(self.data)
         else:
             self.reader = Reader(self.data)
