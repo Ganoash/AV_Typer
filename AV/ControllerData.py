@@ -29,9 +29,9 @@ class ControllerData(object):
         self.screen_types = ['select', 'type']
         self.current_screen = 'select'
         self.config = config
-        self.sheet_types = list(filter(lambda x: not x[0].isupper(), config.sections()))
-        self.sheet_type = self.sheet_types[0]
+        self.sheet_types = list(str(st) for st in SheetType)
         self.file_path = ""
+
         self.sheet_type = SheetType.ACTIVITEIT
         self.sheet_name = ""
 
@@ -49,11 +49,15 @@ class ControllerData(object):
         return self._sheet_type
 
     @sheet_type.setter
-    def sheet_type(self, sheet_type: SheetType):
-        if sheet_type in self.sheet_types:
-            self._sheet_type = sheet_type
-        else:
+    def sheet_type(self, sheet_type):
+        if isinstance(sheet_type, str):
+            for type in SheetType:
+                if str(type) == sheet_type:
+                    self._sheet_type = type
+                    return
             raise ValueError('no config available for given sheet type')
+        if isinstance(sheet_type, SheetType):
+            self._sheet_type = sheet_type
 
     @property
     def file_path(self):

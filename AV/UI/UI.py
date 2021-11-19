@@ -56,7 +56,7 @@ class UI(object):
         # create sheet_type field
 
         options = tk.StringVar(frame)
-        options.set(self.data.sheet_type)
+        options.set(str(self.data.sheet_type))
         data_label = tk.Label(master=frame,
                               text="Sheet type")
         data_label.grid(row=0, column=2)
