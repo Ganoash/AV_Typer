@@ -10,6 +10,7 @@ __pycache__/
 # Distribution / packaging
 .Python
 build/
+dist/
 develop-eggs/
 downloads/
 eggs/
@@ -129,3 +130,4 @@ dmypy.json
 .pyre/
 
 *test_data*
+/dist/
