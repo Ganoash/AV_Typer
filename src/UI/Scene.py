@@ -8,9 +8,9 @@ from typing import TYPE_CHECKING
 
 
 if TYPE_CHECKING:
-    from AV.Controller import Controller
+    from src.Controller import Controller
 
-from AV.Data.SheetType import SheetType
+from src.Data.SheetType import SheetType
 
 class SceneType(Enum):
     """Enumeration for the 2 types of sheets
@@ -90,6 +90,13 @@ class Scene(object):
 
 
 class TypeScene(Scene):
+    """Class representing the typescene
+
+        Methods
+        -------
+        render(self)
+            implemented method for showing the type screen
+        """
 
     def __init__(self, _, controller: Controller):
         self.sheet_names = controller.file.sheet_names
@@ -111,6 +118,7 @@ class TypeScene(Scene):
                              *self.sheet_names,
                              command=self.controller.set_active)
         data.grid(row=2, column=0)
+
         # create write_baten button
         self.button(frame, "Baten uitschrijven", self.controller.start_write_baten, 3, 0)
 
@@ -125,6 +133,18 @@ class TypeScene(Scene):
 
 
 class SelectScene(Scene):
+    """Class representing the SelectScene
+
+        Methods
+        -------
+        render(self)
+            implemented method for showing the SelectScene
+        select_file(self, entry: tk.Entry)
+            Subroutine for selecting a file using explorer interface
+        show_open_error(self)
+            Subroutine for showing an error when something is wrong with object path
+
+        """
     def __init__(self, _, controller: Controller):
         super().__init__(_, controller)
 

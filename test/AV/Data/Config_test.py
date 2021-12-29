@@ -1,6 +1,6 @@
 import unittest
-from AV.Data.Config import Config, WeekendConfig, BorrelConfig
-from AV.Data.SheetType import SheetType
+from src.Data.Config import Config, WeekendConfig, BorrelConfig
+from src.Data.SheetType import SheetType
 
 class MyTestCase(unittest.TestCase):
 

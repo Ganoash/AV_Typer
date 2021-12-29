@@ -5,9 +5,9 @@ import os.path as path
 import pandas as pd
 from configparser import ConfigParser
 # package imports
-from AV.Data.File import File
-from AV.Data.SheetType import SheetType
-from AV.Reader.Collector import Collector
+from src.Data.File import File
+from src.Data.SheetType import SheetType
+from src.Reader.Collector import Collector
 
 config = ConfigParser()
 config.read(path.join(path.dirname(__file__), "../__conf__.ini"))

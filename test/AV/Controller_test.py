@@ -1,11 +1,11 @@
 import unittest
 from os import path
 
-from AV.Controller import Controller
-from AV.UI.Scene import SelectScene, TypeScene
-from AV.Data.File import FileBuilder, SheetType
-from AV.Reader.Reader import Reader, File, BorrelReader, SimpleReader, WeekendReader
-from AV.Data.Config import Config, WeekendConfig, BorrelConfig
+from src.Controller import Controller
+from src.UI.Scene import SelectScene, TypeScene
+from src.Data.File import FileBuilder, SheetType
+from src.Reader.Reader import Reader, File, BorrelReader, SimpleReader, WeekendReader
+from src.Data.Config import Config, WeekendConfig, BorrelConfig
 
 class ControllerTest(unittest.TestCase):
 

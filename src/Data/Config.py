@@ -4,8 +4,8 @@ from dataclasses import dataclass
 # dependency imports
 from configparser import ConfigParser
 # package imports
-from AV.Data.SheetType import SheetType
-from AV.Utility import resource_path
+from src.Data.SheetType import SheetType
+from src.Utility import resource_path
 
 
 @dataclass

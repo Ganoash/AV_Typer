@@ -4,13 +4,16 @@ from os import path
 # dependency import
 from configparser import ConfigParser
 # package imports
-from AV.Reader.Reader import Reader
-from AV.Writer.Writer import Writer
-from AV.Data.File import FileBuilder
-from AV.UI.Scene import Scene, SceneType
-from AV.Utility import resource_path
+from src.Reader.Reader import Reader
+from src.Writer.Writer import Writer
+from src.Data.File import FileBuilder
+from src.UI.Scene import Scene, SceneType
+from src.Utility import resource_path
+
 
 class Controller(object):
+    """Controller handling interaction between UI and the rest of the code
+    """
 
     def __init__(self, test=False):
         config = ConfigParser()

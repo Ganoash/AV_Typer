@@ -3,8 +3,8 @@ import tkinter
 # dependency imports
 import openpyxl
 # package imports
-from AV.Data.Config import Config
-from AV.Data.SheetType import SheetType
+from src.Data.Config import Config
+from src.Data.SheetType import SheetType
 
 
 class File(object):

@@ -1,8 +1,8 @@
 import unittest
 from os import path
-from AV.Data.File import File
-from AV.Data.SheetType import SheetType
-from AV.Reader.Collector import Collector
+from src.Data.File import File
+from src.Data.SheetType import SheetType
+from src.Reader.Collector import Collector
 import pandas as pd
 
 

@@ -7,10 +7,12 @@ from configparser import ConfigParser
 import keyboard
 import pandas as pd
 # package imports
-from AV.Utility import resource_path
+from src.Utility import resource_path
 
 
 class Data_Stepper(object):
+    """ Iterable wrapper for dataframe
+    """
 
     def __init__(self, data):
         self.data: pd.DataFrame = data
@@ -39,6 +41,32 @@ class Data_Stepper(object):
 
 
 class Writer(object):
+    """Class for mapping data to keyboard output
+
+    Attributes
+    ----------
+    key_press_delay
+        delay between each key press
+    tab_delay
+        delay between each tab press
+    leave_key
+        key to press to stop typing process
+    start_key
+        key to press to start typing process
+
+    Methods
+    -------
+    write(self, data: Data_stepper, double_enter: bool = False)
+        Main method for converting data to keyboard output
+    write_lasten(self, overzicht: pd.DataFrame, bijdragers: pd.DataFrame):
+        wrapper method for writing lasten regels as created by the READER class
+    write_baten(self, df: pd.DataFrame):
+        wrapper method for writing baten regels as created by the READER class
+    wait(self):
+        Method for stopping time for one tab delay
+    wait_for_key(self):
+        Method for halting typing until a given key is pressed
+    """
 
     def __init__(self):
         config = ConfigParser()

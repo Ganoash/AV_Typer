@@ -5,8 +5,8 @@ import openpyxl
 import pandas as pd
 from configparser import ConfigParser
 # package imports
-from AV.Data.File import File
-from AV.Utility import resource_path
+from src.Data.File import File
+from src.Utility import resource_path
 
 # read config
 config = ConfigParser()
