@@ -1,0 +1,11 @@
+[build-system]
+requires = [
+    "setuptools>=42",
+    "wheel",
+    "pandas",
+    "configparser",
+    "openpyxl",
+    "tkinter",
+    "keyboard",
+    ""
+]
