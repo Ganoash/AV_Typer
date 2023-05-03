@@ -1,9 +1,11 @@
 # standard library imports
 from typing import Tuple
 import os.path as path
+
 # dependency imports
 import pandas as pd
 from configparser import ConfigParser
+
 # package imports
 from src.Data.File import File
 from src.Data.SheetType import SheetType
@@ -43,7 +45,7 @@ class Reader(object):
         if file.type is SheetType.SIMPEL:
             return super(Reader, SimpleReader).__new__(SimpleReader)
         else:
-            return super(Reader, Reader).__new__(Reader)
+            return super(Reader, BorrelReader).__new__(BorrelReader)
 
     def __init__(self, file: File):
         self.file = file
@@ -56,19 +58,27 @@ class Reader(object):
         :rtype: pd.DataFrame
         """
         if self.file.active is None:
-            raise ValueError('Set an active sheet before getting the lasten!')
+            raise ValueError("Set an active sheet before getting the lasten!")
 
         # collect overzicht, filter alle niet lasten grootboeken, en format dataframe
         overzicht = self.collector.collect_overzicht()
-        overzicht = overzicht.loc[overzicht["GBK"].map(lambda c: str(c)[0] == '4')] \
-            .drop(['Credit', 'Saldo'], axis=1) \
-            .rename({'Debit': 'Bedrag'}, axis=1)
+        overzicht = (
+            overzicht.loc[overzicht["GBK"].map(lambda c: str(c)[0] == "4")]
+            .drop(["Credit", "Saldo"], axis=1)
+            .rename({"Debit": "Bedrag"}, axis=1)
+        )
+        overzicht["GBK"] = overzicht["GBK"].astype(int)
 
         # collect debiteuren, filter diegene er uit die dingen hebben voorgeschoten format bedragen
         bijdragers = self.collector.collect_debiteuren()
-        bijdragers: pd.DataFrame = bijdragers.loc[bijdragers['Credit'] != 0]
-        bijdragers: pd.DataFrame = bijdragers.drop(['Debit', 'Saldo'], axis=1).rename({'Credit': 'Bedrag'}, axis=1)
-        bijdragers["Omschrijving"] = bijdragers["Omschrijving"].map("Bijdrage {}".format)
+        bijdragers: pd.DataFrame = bijdragers.loc[bijdragers["Credit"] != 0]
+        bijdragers: pd.DataFrame = bijdragers.drop(["Debit", "Saldo"], axis=1).rename(
+            {"Credit": "Bedrag"}, axis=1
+        )
+        bijdragers["Omschrijving"] = bijdragers["Omschrijving"].map(
+            "Bijdrage {}".format
+        )
+        bijdragers["GBK"] = bijdragers["GBK"].astype(int)
 
         return overzicht, bijdragers
 
@@ -79,22 +89,28 @@ class Reader(object):
         :rtype: pd.DataFrame
         """
         if self.file.active is None:
-            raise ValueError('Set an active sheet before getting the baten!')
+            raise ValueError("Set an active sheet before getting the baten!")
 
         # collect overzicht, filter alle niet baten grootboeken, en format dataframe
         overzicht = self.collector.collect_overzicht()
         print(overzicht)
-        overzicht = overzicht.loc[overzicht["GBK"].map(lambda c: str(c)[0] == '8')] \
-            .drop(['Credit', 'Debit'], axis=1) \
-            .rename({'Saldo': 'Bedrag'}, axis=1)
+        overzicht = (
+            overzicht.loc[overzicht["GBK"].map(lambda c: str(c)[0] == "8")]
+            .drop(["Credit", "Debit"], axis=1)
+            .rename({"Saldo": "Bedrag"}, axis=1)
+        )
 
         # collect winst door afronding en format dataframe
         winst_afronding = self.collector.collect_afronding()
-        winst_afronding = winst_afronding.drop(['Credit', 'Debit'], axis=1).rename({'Saldo': 'Bedrag'}, axis=1)
+        winst_afronding = winst_afronding.drop(["Credit", "Debit"], axis=1).rename(
+            {"Saldo": "Bedrag"}, axis=1
+        )
 
         # collect debiteuren en format bedragen
         debiteuren = self.collector.collect_debiteuren()
-        debiteuren = debiteuren.drop(['Credit', 'Saldo'], axis=1).rename({'Debit': 'Bedrag'}, axis=1)
+        debiteuren = debiteuren.drop(["Credit", "Saldo"], axis=1).rename(
+            {"Debit": "Bedrag"}, axis=1
+        )
         debiteuren["Omschrijving"] = debiteuren["Omschrijving"].map("Kosten {}".format)
 
         return pd.concat([overzicht, debiteuren, winst_afronding], axis=0)
@@ -136,10 +152,14 @@ class BorrelReader(Reader):
     def get_lasten(self) -> Tuple[pd.DataFrame, pd.DataFrame]:
         overzicht, bijdragers = super().get_lasten()
         bp_data: pd.DataFrame = self.collector.collect_bp_range()
-        bp_line = bp_data.drop(['Credit', 'Debit'], axis=1) \
-            .rename({'Saldo': 'Bedrag'}, axis=1).iloc[[0]]
-        bp_line['Bedrag'] = bp_data['Saldo'].sum()
+        bp_line = (
+            bp_data.drop(["Credit", "Debit"], axis=1)
+            .rename({"Saldo": "Bedrag"}, axis=1)
+            .iloc[[0]]
+        )
+        bp_line["Bedrag"] = bp_data["Saldo"].sum()
         bp_line.loc[:, "Omschrijving"] = "Credit BP " + self.file.active
+        bp_line["GBK"] = bp_line["GBK"].astype(int)
         print(bp_line)
         print(bp_data)
 
@@ -162,9 +182,11 @@ class WeekendReader(Reader):
         print(overzicht.columns)
 
         overzicht = overzicht[overzicht.Bedrag != 0]
-        subsidie_data: pd.DataFrame = self.collector.collect_weekend_subsidie() \
-            .drop(['Credit', 'Saldo'], axis=1) \
-            .rename({'Debit': 'Bedrag'}, axis=1)
+        subsidie_data: pd.DataFrame = (
+            self.collector.collect_weekend_subsidie()
+            .drop(["Credit", "Saldo"], axis=1)
+            .rename({"Debit": "Bedrag"}, axis=1)
+        )
         subsidie_data["Omschrijving"] = "Voorklimsubsidie Yeti " + self.file.active
         print(subsidie_data)
         return pd.concat([overzicht, subsidie_data], axis=0), bijdragers

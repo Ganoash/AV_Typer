@@ -1,8 +1,10 @@
 # standard library import
 from os import path
 from dataclasses import dataclass
+
 # dependency imports
 from configparser import ConfigParser
+
 # package imports
 from src.Data.SheetType import SheetType
 from src.Utility import resource_path
@@ -10,7 +12,7 @@ from src.Utility import resource_path
 
 @dataclass
 class Config(object):
-    """ Dataclass representing a Config block
+    """Dataclass representing a Config block
 
     This is a config object that will initialize itself based on it's SheetType, and subclass itself
     automatically where necessary. It reads data from __conf__.ini and represents it internally as an object.
@@ -42,6 +44,7 @@ class Config(object):
     reload_config()
         Calls _initialize again to reload data from config
     """
+
     type: SheetType = None
     filter: str = None
     column_range: list = None
@@ -61,10 +64,10 @@ class Config(object):
             Determines subclassing, properties, and property header read from __config__.ini
 
         """
-        if type is SheetType.BORREL:
-            return super(Config, BorrelConfig).__new__(BorrelConfig)
         if type is SheetType.WEEKEND:
             return super(Config, WeekendConfig).__new__(WeekendConfig)
+        if type is SheetType.BORREL or type is SheetType.ACTIVITEIT:
+            return super(Config, BorrelConfig).__new__(BorrelConfig)
         return super(Config, cls).__new__(cls)
 
     def __post_init__(self):
@@ -76,15 +79,33 @@ class Config(object):
         config = ConfigParser()
         config.read(resource_path("__conf__.ini"))
         self.config = config[str(self.type)]
-        self.filter = self.config['filter']
-        self.column_range = list(range(int(self.config['column_range'].split(',')[0]) - 1,
-                                       int(self.config['column_range'].split(',')[1])))
-        self.overzicht_range = list(range(int(self.config['overzicht_range'].split(',')[0]) - 1,
-                                          int(self.config['overzicht_range'].split(',')[1])))
-        self.afronding_range = list(range(int(self.config['afronding_range'].split(',')[0]) - 1,
-                                          int(self.config['afronding_range'].split(',')[1])))
-        self.debiteuren_start = int(self.config['debiteuren_start']) - 1
-        self.header_index = int(self.config['header_index'])
+        self.filter = self.config["filter"]
+        self.column_range = list(
+            range(
+                int(self.config["column_range"].split(",")[0]) - 1,
+                int(self.config["column_range"].split(",")[1]),
+            )
+        )
+        self.overzicht_range = list(
+            range(
+                int(self.config["overzicht_range"].split(",")[0]) - 1,
+                int(self.config["overzicht_range"].split(",")[1]),
+            )
+        )
+        self.afronding_range = list(
+            range(
+                int(self.config["afronding_range"].split(",")[0]) - 1,
+                int(self.config["afronding_range"].split(",")[1]),
+            )
+        )
+        self.debiteuren_start = int(self.config["debiteuren_start"]) - 1
+        self.header_index = int(self.config["header_index"])
+        self.uitgaven_bank_boek_range = list(
+            range(
+                int(self.config["voorgeschoten_vanuit_bank_range"].split(",")[0]) - 1,
+                int(self.config["voorgeschoten_vanuit_bank_range"].split(",")[1]),
+            )
+        )
 
     def reload_config(self):
         """reloads data from __config__.ini"""
@@ -92,7 +113,7 @@ class Config(object):
 
 
 class WeekendConfig(Config):
-    """ Datclass representing a weekend config block
+    """Datclass representing a weekend config block
 
     This is a config object representing the weekend block in __config__.ini. Adds functionality for voorklim_index
 
@@ -102,15 +123,16 @@ class WeekendConfig(Config):
         The row number in the weekendsheet containing data for voorklimsubsidie
 
     """
+
     voorklim_index: int = None
 
     def _initialize(self):
         super()._initialize()
-        self.voorklim_index = int(self.config['voorklim_index'])
+        self.voorklim_index = int(self.config["voorklim_index"])
 
 
 class BorrelConfig(Config):
-    """ Datclass representing a weekend config block
+    """Datclass representing a weekend config block
 
     This is a config object representing the borrel block in __config__.ini. Adds functionality for voorklim_index
 
@@ -120,9 +142,14 @@ class BorrelConfig(Config):
         The row numbers of the first and last row containing data for the bp credit for a borrel
 
     """
+
     bp_range: list = None
 
     def _initialize(self):
         super()._initialize()
-        self.bp_range = list(range(int(self.config['bp_range'].split(',')[0]) - 1,
-                                   int(self.config['bp_range'].split(',')[1])))
+        self.bp_range = list(
+            range(
+                int(self.config["bp_range"].split(",")[0]) - 1,
+                int(self.config["bp_range"].split(",")[1]),
+            )
+        )

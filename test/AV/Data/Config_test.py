@@ -2,8 +2,8 @@ import unittest
 from src.Data.Config import Config, WeekendConfig, BorrelConfig
 from src.Data.SheetType import SheetType
 
-class MyTestCase(unittest.TestCase):
 
+class MyTestCase(unittest.TestCase):
     def test_config_borrel_instantiation(self):
         """
         instantiating a Config for sheetType Borrel should return a BorrelConfig
@@ -77,15 +77,25 @@ class MyTestCase(unittest.TestCase):
         conf_b = Config(SheetType.BORREL)
         conf_s = Config(SheetType.SIMPEL)
 
-        self.assertTrue(conf_a.column_range == conf_w.column_range == conf_b.column_range != conf_s.column_range)
-        self.assertTrue(conf_w.overzicht_range == conf_b.overzicht_range
-                        != conf_a.overzicht_range != conf_s.overzicht_range)
-        self.assertTrue(conf_w.afronding_range == conf_b.afronding_range
-                        != conf_a.afronding_range != conf_s.afronding_range)
+        self.assertTrue(
+            conf_a.column_range
+            == conf_w.column_range
+            == conf_b.column_range
+            != conf_s.column_range
+        )
+        self.assertTrue(
+            conf_w.overzicht_range
+            == conf_b.overzicht_range
+            != conf_a.overzicht_range
+            != conf_s.overzicht_range
+        )
+        self.assertTrue(
+            conf_w.afronding_range
+            == conf_b.afronding_range
+            != conf_a.afronding_range
+            != conf_s.afronding_range
+        )
 
 
-
-
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

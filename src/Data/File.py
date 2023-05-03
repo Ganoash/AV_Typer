@@ -1,7 +1,9 @@
 # standard library imports
 import tkinter
+
 # dependency imports
 import openpyxl
+
 # package imports
 from src.Data.Config import Config
 from src.Data.SheetType import SheetType
@@ -35,7 +37,9 @@ class File(object):
         self.config: Config = Config(type)
 
         wb = openpyxl.load_workbook(self.path, read_only=True, data_only=True)
-        self._sheet_names = list(filter(lambda sheet: sheet not in self.config.filter, wb.sheetnames))
+        self._sheet_names = list(
+            filter(lambda sheet: sheet not in self.config.filter, wb.sheetnames)
+        )
         wb.close()
 
     @property
@@ -124,7 +128,7 @@ class FileBuilder:
         if not (file_name.endswith(".xlsx") or file_name.endswith(".xls")):
             return False
         try:
-            data = open(file=file_name, mode='r')
+            data = open(file=file_name, mode="r")
             data.close()
             print(data)
             return True

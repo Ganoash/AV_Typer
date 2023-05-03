@@ -1,9 +1,11 @@
 # standard library imports
 import os.path as path
+
 # dependency imports
 import openpyxl
 import pandas as pd
 from configparser import ConfigParser
+
 # package imports
 from src.Data.File import File
 from src.Utility import resource_path
@@ -49,22 +51,24 @@ class Collector(object):
         wb = openpyxl.load_workbook(self.file.path, read_only=True, data_only=True)
         ws: openpyxl.workbook.workbook.Worksheet = wb[self.file.active]
         df = pd.DataFrame(ws.values)[self.config.column_range]
-        df.columns = df.iloc[int(self.config.header_index)-1]
+        df.columns = df.iloc[int(self.config.header_index) - 1]
 
         return df
 
     def collect_overzicht(self) -> pd.DataFrame:
-        return self.load_data().loc[self.config.overzicht_range].dropna(how='all', thresh=4)
+        return self.load_data().loc[self.config.overzicht_range].dropna(how="all")
 
     def collect_afronding(self) -> pd.DataFrame:
-        return self.load_data().loc[self.config.afronding_range].dropna(how='all')
+        return self.load_data().loc[self.config.afronding_range].dropna(how="all")
 
     def collect_debiteuren(self) -> pd.DataFrame:
-        return self.load_data().loc[self.config.debiteuren_start:].dropna(how='all')
+        return self.load_data().loc[self.config.debiteuren_start :].dropna(how="all")
 
     def collect_bp_range(self):
         return self.load_data().loc[self.config.bp_range]
 
-    def collect_weekend_subsidie(self):
-        return self.load_data().loc[[self.config.voorklim_index-1]]
+    def collect_uitgaven_bankboek(self):
+        return self.load_data().loc[self.config.uitgaven_bank_boek_range]
 
+    def collect_weekend_subsidie(self):
+        return self.load_data().loc[[self.config.voorklim_index - 1]]

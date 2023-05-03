@@ -25,5 +25,11 @@ Er zijn 4 sheet types
 3. weekend voor weekend sheets
 4. simpel voor sheets volgens een vast formaat. de contributie sheet werkt hier bijvoorbeeld ook mee.
 
+## Verschil V1 en V2
+V2 bied support voor de nieuwe activiteiten sheet (die die begint op regel 4 ipv 1, net zoals de andere sheets), en heeft een fix voor bugs waar het grootboek als float werd gezien (aka een .0 achteraan werd gezet.). Verder worden bijdragen van BP bij activiteiten sheets nu wel toegvoegd. V2 is zo mogelijk nog slechter getest dan V1 dus laat vooral weten als er iets kapot is.
+
+## memo aan mezelf
+build-command is: `pyinstaller --add-data 'src/__conf__.ini;.' ./src/AV_Typer.py`
+
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)

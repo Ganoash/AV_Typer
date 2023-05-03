@@ -7,8 +7,8 @@ from src.Data.File import FileBuilder, SheetType
 from src.Reader.Reader import Reader, File, BorrelReader, SimpleReader, WeekendReader
 from src.Data.Config import Config, WeekendConfig, BorrelConfig
 
-class ControllerTest(unittest.TestCase):
 
+class ControllerTest(unittest.TestCase):
     def test_instantiation(self):
         controller = Controller(test=True)
         self.assertIsInstance(controller.scene, SelectScene)
@@ -20,7 +20,11 @@ class ControllerTest(unittest.TestCase):
         self.assertIsNone(controller.reader)
         self.assertIsNone(controller.file)
 
-        controller.set_path(path.join(path.dirname(__file__), "../../test_data/Activiteitensheet 21.xlsx"))
+        controller.set_path(
+            path.join(
+                path.dirname(__file__), "../../test_data/Activiteitensheet 21.xlsx"
+            )
+        )
         controller.set_type(SheetType.ACTIVITEIT)
         controller.build_file()
 
@@ -30,7 +34,11 @@ class ControllerTest(unittest.TestCase):
     def test_scene_switch(self):
         controller = Controller(test=True)
         self.assertIsInstance(controller.scene, SelectScene)
-        controller.set_path(path.join(path.dirname(__file__), "../../test_data/Activiteitensheet 21.xlsx"))
+        controller.set_path(
+            path.join(
+                path.dirname(__file__), "../../test_data/Activiteitensheet 21.xlsx"
+            )
+        )
         controller.set_type(SheetType.ACTIVITEIT)
         controller.transition_to_type()
 
@@ -42,14 +50,23 @@ class ControllerTest(unittest.TestCase):
     def test_scene_switch_data(self):
         controller = Controller(test=True)
         self.assertIsInstance(controller.scene, SelectScene)
-        controller.set_path(path.join(path.dirname(__file__), "../../test_data/Activiteitensheet 21.xlsx"))
+        controller.set_path(
+            path.join(
+                path.dirname(__file__), "../../test_data/Activiteitensheet 21.xlsx"
+            )
+        )
         controller.set_type(SheetType.WEEKEND)
         controller.transition_to_type()
 
         self.assertIsInstance(controller.scene, TypeScene)
 
         controller.transition_to_select()
-        self.assertEqual(controller.builder.path, path.join(path.dirname(__file__), "../../test_data/Activiteitensheet 21.xlsx"))
+        self.assertEqual(
+            controller.builder.path,
+            path.join(
+                path.dirname(__file__), "../../test_data/Activiteitensheet 21.xlsx"
+            ),
+        )
         self.assertEqual(controller.builder.type, SheetType.WEEKEND)
 
     def test_file_state(self):
@@ -60,7 +77,11 @@ class ControllerTest(unittest.TestCase):
 
     def file_state(self, sheet_type):
         controller = Controller(test=True)
-        controller.set_path(path.join(path.dirname(__file__), "../../test_data/Activiteitensheet 21.xlsx"))
+        controller.set_path(
+            path.join(
+                path.dirname(__file__), "../../test_data/Activiteitensheet 21.xlsx"
+            )
+        )
         controller.set_type(sheet_type)
         controller.transition_to_type()
 
@@ -80,7 +101,5 @@ class ControllerTest(unittest.TestCase):
             self.assertIsInstance(controller.reader, Reader)
 
 
-
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

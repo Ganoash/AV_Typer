@@ -1,8 +1,10 @@
 # standard library imports
 import threading
 from os import path
+
 # dependency import
 from configparser import ConfigParser
+
 # package imports
 from src.Reader.Reader import Reader
 from src.Writer.Writer import Writer
@@ -12,14 +14,13 @@ from src.Utility import resource_path
 
 
 class Controller(object):
-    """Controller handling interaction between UI and the rest of the code
-    """
+    """Controller handling interaction between UI and the rest of the code"""
 
     def __init__(self, test=False):
         config = ConfigParser()
         config.read(resource_path("__conf__.ini"))
         self.writer = Writer()
-        self.stop_button = config['Typing']['leave_key']
+        self.stop_button = config["Typing"]["leave_key"]
         self.reader = None
         self.file = None
 
@@ -30,11 +31,15 @@ class Controller(object):
             self.scene.render()
 
     def start_write_baten(self):
-        t = threading.Thread(target=self.writer.write_baten, args=[self.reader.get_baten()])
+        t = threading.Thread(
+            target=self.writer.write_baten, args=[self.reader.get_baten()]
+        )
         t.start()
 
     def start_write_lasten(self):
-        t = threading.Thread(target=self.writer.write_lasten, args=[*self.reader.get_lasten()])
+        t = threading.Thread(
+            target=self.writer.write_lasten, args=[*self.reader.get_lasten()]
+        )
         t.start()
 
     def transition_to_type(self):

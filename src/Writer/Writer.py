@@ -2,27 +2,28 @@
 import datetime
 import time
 from os import path
+
 # dependency import
 from configparser import ConfigParser
 import keyboard
 import pandas as pd
+
 # package imports
 from src.Utility import resource_path
 
 
 class Data_Stepper(object):
-    """ Iterable wrapper for dataframe
-    """
+    """Iterable wrapper for dataframe"""
 
     def __init__(self, data):
         self.data: pd.DataFrame = data
         self.tabs = {
-            'Datum': 1,
-            'Deb_NR': 1,
-            'GBK': 1,
-            'Doc/fac': 1,
-            'Omschrijving': 4,
-            'Bedrag': -1,
+            "Datum": 1,
+            "Deb_NR": 1,
+            "GBK": 1,
+            "Doc/fac": 1,
+            "Omschrijving": 4,
+            "Bedrag": -1,
         }
 
     def __iter__(self):
@@ -33,7 +34,7 @@ class Data_Stepper(object):
                     writable = str(round(row[key], 2))
                     print(writable)
                 elif type(row[key]) is datetime.datetime:
-                    writable = row[key].strftime('%d%m%y')
+                    writable = row[key].strftime("%d%m%y")
                 else:
                     writable = str(row[key]) if row[key] else ""
 
@@ -83,16 +84,16 @@ class Writer(object):
             keyboard.write(writable, delay=self.key_press_delay)
             self.wait()
             if tabs == -1:
-                keyboard.press('enter')
+                keyboard.press("enter")
                 if double_enter:
-                    keyboard.press('enter')
+                    keyboard.press("enter")
                 self.wait()
             else:
                 for _ in range(tabs):
-                    keyboard.press('tab')
+                    keyboard.press("tab")
                     self.wait()
             if keyboard.is_pressed(self.leave_key):
-                print('terminated')
+                print("terminated")
                 break
 
     def write_lasten(self, overzicht: pd.DataFrame, bijdragers: pd.DataFrame):

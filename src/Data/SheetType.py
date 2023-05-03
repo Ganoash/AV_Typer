@@ -1,6 +1,7 @@
 # standard library imports
 from enum import Enum, auto
 
+
 class SheetType(Enum):
     """Enumeration of the various types of sheets
 
@@ -17,6 +18,7 @@ class SheetType(Enum):
     from_string(class, value):
         function for equivalent string to SheetType conversion
     """
+
     ACTIVITEIT = auto()
     WEEKEND = auto()
     BORREL = auto()
