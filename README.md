@@ -28,6 +28,16 @@ Er zijn 4 sheet types
 ## Verschil V1 en V2
 V2 bied support voor de nieuwe activiteiten sheet (die die begint op regel 4 ipv 1, net zoals de andere sheets), en heeft een fix voor bugs waar het grootboek als float werd gezien (aka een .0 achteraan werd gezet.). Verder worden bijdragen van BP bij activiteiten sheets nu wel toegvoegd. V2 is zo mogelijk nog slechter getest dan V1 dus laat vooral weten als er iets kapot is.
 
+## Known Bugs
+### V1
+- Werkt niet meer met de huidige activiteiten sheet.
+- Grootboek wordt soms .0 achter gezet
+- Bijdrage van BP wordt bij activiteiten sheet niet toegevoegd.
+- Bijhouden van de weekendsubsidie is niet correct
+### V2
+- Simpel sheet settings voor contributie e.d. spuugt geen text uit in de terminal. Het werkt wel (zolang je baten gebruikt).
+- Als je voorschoten op de zelfde doc-fac zet moet je in AV twee keer op enter drukken. Er is geen robuste manier om dit in de typer mee te nemen, ik zou voorschoten dus vooral gewoon op de debiteurenstand zetten.
+
 ## memo aan mezelf
 build-command is: `pyinstaller --add-data 'src/__conf__.ini;.' ./src/AV_Typer.py`
 
