@@ -1,6 +1,7 @@
 # standard library imports
 import datetime
 import time
+import warnings
 from os import path
 
 # dependency import
@@ -25,17 +26,22 @@ class Data_Stepper(object):
             "Omschrijving": 4,
             "Bedrag": -1,
         }
+        self.keys_parsing = {"Datum": datetime.datetime, "Deb_Nr": int, "GBK": int, "Doc/fac": str, "Omschrijving": str,
+                             "bedrag": float}
 
     def __iter__(self):
         for index, row in self.data.iterrows():
             for key in row.keys():
-                print(row[key], type(row[key]))
-                if type(row[key]) is float:
+                value = self.keys_parsing[key](row[key])
+                if value is float:
                     writable = str(round(row[key], 2))
-                    print(writable)
-                elif type(row[key]) is datetime.datetime:
+                elif value is int:
+                    writable = str(value)
+                elif value is datetime.datetime:
                     writable = row[key].strftime("%d%m%y")
                 else:
+                    warnings.warn(
+                        f"{index, key} was not a float or a datetime but a {type(row[key])} conversion might be wrong when typing!")
                     writable = str(row[key]) if row[key] else ""
 
                 yield writable, self.tabs[key]
